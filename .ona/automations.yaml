@@ -1,0 +1,40 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Install npm dependencies from the lockfile.
+    command: |
+      npm ci
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    description: Build the production bundle with Vite.
+    command: |
+      npm run build
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+  test:
+    name: Test
+    description: Run the Vitest test suite.
+    command: |
+      npm run test
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+services:
+  dev-server:
+    name: Dev Server
+    description: Run the TanStack Start dev server on port 3000.
+    commands:
+      start: |
+        npm run dev
+      ready: |
+        curl -sf http://localhost:3000
