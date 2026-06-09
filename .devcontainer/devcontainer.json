@@ -1,0 +1,13 @@
+// The Dev Container format allows you to configure your environment.
+// See https://aka.ms/devcontainer.json for more information.
+{
+	"name": "TanStack Start",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+	"forwardPorts": [3000],
+	"portsAttributes": {
+		"3000": {
+			"label": "Dev Server",
+			"onAutoForward": "notify"
+		}
+	}
+}

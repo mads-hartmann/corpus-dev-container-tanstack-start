@@ -1,0 +1,18 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Install npm dependencies for the project.
+    command: |
+      npm install
+    triggeredBy:
+      - postDevcontainerStart
+
+services:
+  devServer:
+    name: Dev Server
+    description: Run the TanStack Start (Vite) development server on port 3000.
+    commands:
+      start: |
+        npm run dev
+      ready: |
+        curl -sf http://localhost:3000 > /dev/null
