@@ -1,0 +1,41 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Install npm dependencies for the project.
+    command: |
+      npm install
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    description: Build the production bundle.
+    command: |
+      npm run build
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+  test:
+    name: Test
+    description: Run the test suite.
+    command: |
+      npm run test
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+services:
+  dev-server:
+    name: Dev Server
+    description: Run the TanStack Start dev server.
+    commands:
+      start: |
+        ona environment port open 3000 --admission creator_only --name dev-server
+        npm run dev
+      ready: |
+        curl -f http://localhost:3000
