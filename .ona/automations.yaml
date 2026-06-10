@@ -1,0 +1,44 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Install npm dependencies for the project.
+    command: |
+      npm install
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    description: Build the production bundle with Vite.
+    command: |
+      npm run build
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+  test:
+    name: Test
+    description: Run the Vitest test suite.
+    command: |
+      npm run test
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+services:
+  dev-server:
+    name: Dev Server
+    description: TanStack Start (Vite) development server.
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
+    commands:
+      start: |
+        ona environment port open 3000 --dont-wait --admission creator_only --name "Dev Server"
+        npm run dev -- --host 0.0.0.0
+      ready: |
+        curl -sf http://localhost:3000
