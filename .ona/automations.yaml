@@ -1,0 +1,44 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Install npm dependencies from the lockfile.
+    command: |
+      npm ci
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    description: Build the application for production.
+    command: |
+      npm run build
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+  test:
+    name: Test
+    description: Run the test suite with Vitest.
+    command: |
+      npm run test
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+services:
+  dev-server:
+    name: Dev Server
+    description: Run the TanStack Start dev server.
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
+    commands:
+      start: |
+        ona environment port open 3000 --dont-wait --admission creator_only --name "dev-server"
+        npm run dev -- --host 0.0.0.0
+      ready: |
+        curl -sf http://localhost:3000 > /dev/null
