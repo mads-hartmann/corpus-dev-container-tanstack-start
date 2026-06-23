@@ -8,6 +8,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  // Allow the Ona exposed-port host to reach the dev server. Only affects
+  // `vite dev` (not the production build); the port is private to the creator.
+  server: { allowedHosts: true },
   plugins: [devtools(), tailwindcss(), tanstackStart(), viteReact()],
 })
 
