@@ -1,0 +1,29 @@
+tasks:
+  install-dependencies:
+    name: Install dependencies
+    command: npm ci
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    command: npm run build
+    dependsOn:
+      - install-dependencies
+    triggeredBy:
+      - manual
+
+services:
+  dev-server:
+    name: Dev server
+    commands:
+      start: |
+        npm run dev -- --host 0.0.0.0 > /tmp/tanstack-start-dev.log 2>&1 &
+        ona environment port open 3000 --dont-wait --admission creator_only --name "Dev server"
+        wait
+      ready: curl -sf http://localhost:3000
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
