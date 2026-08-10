@@ -1,0 +1,32 @@
+tasks:
+  install-dependencies:
+    name: Install dependencies
+    description: Install the locked npm dependency tree.
+    command: npm ci
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    description: Build the production application.
+    command: npm run build
+    dependsOn:
+      - install-dependencies
+    triggeredBy:
+      - manual
+
+services:
+  dev-server:
+    name: Dev server
+    description: Run the TanStack Start development server.
+    commands:
+      start: |
+        gitpod environment port open 3000 --dont-wait --admission creator_only --name "Dev server"
+        export __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS="$(gitpod environment port get 3000 -f URL | cut -c 9-)"
+        npm run dev -- --host 0.0.0.0
+      ready: curl -sf http://localhost:3000
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
