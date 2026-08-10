@@ -1,0 +1,11 @@
+{
+  "name": "corpus-dev-container-tanstack-start",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Dev server",
+      "onAutoForward": "notify"
+    }
+  }
+}
