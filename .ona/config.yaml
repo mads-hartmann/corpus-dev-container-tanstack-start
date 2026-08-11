@@ -1,0 +1,41 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Install the locked Node.js dependencies for the project.
+    command: npm ci
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    description: Build the TanStack Start application for production.
+    command: npm run build
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+  test:
+    name: Test
+    description: Run the project's Vitest test suite.
+    command: npm run test -- --passWithNoTests
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+services:
+  devServer:
+    name: Dev server
+    description: Run the TanStack Start development server.
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
+    commands:
+      start: |
+        ona environment port open 3000 --admission creator_only --name "Dev server"
+        export __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS="$(ona environment port get 3000 -f URL | cut -c 9- | cut -d/ -f1)"
+        npm run dev -- --host 0.0.0.0
+      ready: curl -fsS http://localhost:3000
