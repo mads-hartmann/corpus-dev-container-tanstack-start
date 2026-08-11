@@ -1,0 +1,32 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Install the locked Node.js dependencies.
+    command: npm ci
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+  build:
+    name: Build
+    description: Build the TanStack Start application.
+    command: npm run build
+    triggeredBy:
+      - manual
+    dependsOn:
+      - installDeps
+
+services:
+  dev-server:
+    name: Dev Server
+    description: Run the TanStack Start development server.
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
+    commands:
+      start: |
+        ona environment port open 3000 --admission creator_only --name "Dev Server"
+        EXPOSED_HOST="$(ona environment port get 3000 -f URL | cut -c 9-)"
+        __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS="$EXPOSED_HOST" npm run dev -- --host 0.0.0.0
+      ready: curl -fsS http://localhost:3000
