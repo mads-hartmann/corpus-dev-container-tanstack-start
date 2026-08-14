@@ -1,4 +1,6 @@
 {
 	"name": "TanStack Start",
-	"image": "mcr.microsoft.com/devcontainers/javascript-node:22"
+	"build": {
+		"dockerfile": "Dockerfile"
+	}
 }
